@@ -28,26 +28,4 @@ RSpec.describe Bouquet do
       it { is_expected.to eql(expected_str) }
     end
   end
-
-  describe "#quantity" do
-    subject { bouquet.quantity }
-
-    where(:flowers, :expected_quantity) do
-      [
-        [[], 0],
-        [["aL"], 1],
-        [["aL", "aL"], 2],
-        [["aL", "aL", "bL"], 3]
-      ]
-    end
-
-    with_them do
-      before do
-        flowers.each do |spec|
-          bouquet.add(Flower.new(spec))
-        end
-      end
-      it { is_expected.to eql(expected_quantity) }
-    end
-  end
 end

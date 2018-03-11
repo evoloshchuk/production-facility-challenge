@@ -1,13 +1,13 @@
 class Storage
   class OperationError < StandardError; end
 
-  def initialize(capacity: nil)
+  def initialize(capacity=nil)
     @capacity = capacity
     @line = {}
     @position = 0
     @registry = Hash.new do |h, flower_size|
       h[flower_size] = Hash.new do |h, flower_spec|
-        h[flower_spec] = [] # positions
+        h[flower_spec] = [] # positions on the line
       end
     end
   end
@@ -30,13 +30,12 @@ class Storage
     flower
   end
 
-  def take_first_of_size(size)
+  def first_of_size(size)
     _position, flower = @line.find { |_position, flower| flower.size == size }
-    raise(OperationError, "No flowers of size #{size}") if flower.nil?
-    take(flower)
+    flower
   end
 
-  def most_abundant_of_size(size)
+  def prevalent_of_size(size)
     _flower, positions = @registry[size]
       .sort_by { |spec, positions| -positions.size }
       .first

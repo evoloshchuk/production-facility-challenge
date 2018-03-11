@@ -8,8 +8,8 @@ module Producer
       smallest_produceable_design
     end
 
-    def take_additional_flower_from_storage(design)
-      @storage.take_first_of_size(design.size)
+    def select_additional_flower(design)
+      @storage.first_of_size(design.size)
     end
 
     private

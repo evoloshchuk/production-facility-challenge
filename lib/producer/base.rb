@@ -3,10 +3,10 @@ require_relative "../bouquet"
 
 module Producer
   class Base
-    def initialize(designs, capacity: nil)
+    def initialize(designs, capacity=nil)
       @designs = designs
       @capacity = capacity
-      @storage = Storage.new(capacity: capacity)
+      @storage = Storage.new(capacity)
     end
 
     def consume(flower)
@@ -43,15 +43,16 @@ module Producer
     def add_required_flowers(bouquet, design)
       design.flowers.each do |flower, quantity|
         quantity.times do
-          bouquet.add(@storage.take(flower))
+          flower = @storage.take(flower)
+          bouquet.add(flower)
         end
       end
     end
 
     def add_additional_flowers(bouquet, design)
-      additional = design.quantity - bouquet.quantity
-      additional.times do
-        bouquet.add(take_additional_flower_from_storage(design))
+      design.additional_quantity.times do
+        flower = @storage.take(select_additional_flower(design))
+        bouquet.add(flower)
       end
     end
   end

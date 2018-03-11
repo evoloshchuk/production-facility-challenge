@@ -2,7 +2,7 @@ require_relative "../../lib/flower"
 require_relative "../../lib/storage"
 
 RSpec.describe Storage do
-  let(:storage) { described_class.new(capacity: capacity) }
+  let(:storage) { described_class.new(capacity) }
   let(:capacity) { nil }
 
   let(:flower_al) { Flower.new("aL") }
@@ -146,12 +146,12 @@ RSpec.describe Storage do
     end
   end
 
-  describe "#take_first_of_size" do
-    subject { storage.take_first_of_size("S") }
+  describe "#first_of_size" do
+    subject { storage.first_of_size("S") }
 
     context "when empty" do
       it "raises an exception" do
-        expect { subject }.to raise_error(Storage::OperationError)
+        is_expected.to be_nil
       end
     end
 
@@ -160,7 +160,7 @@ RSpec.describe Storage do
         storage.put(flower_al)
       end
       it "raises an exception" do
-        expect { subject }.to raise_error(Storage::OperationError)
+        is_expected.to be_nil
       end
     end
 
@@ -170,7 +170,6 @@ RSpec.describe Storage do
       end
       it "takes flower from the storage" do
         is_expected.to eql(flower_as)
-        expect(storage.to_s).to eql("")
       end
     end
 
@@ -181,7 +180,6 @@ RSpec.describe Storage do
       end
       it "takes flower from the storage" do
         is_expected.to eql(flower_as)
-        expect(storage.to_s).to eql("aS")
       end
     end
 
@@ -192,7 +190,6 @@ RSpec.describe Storage do
       end
       it "takes flower from the storage" do
         is_expected.to eql(flower_as)
-        expect(storage.to_s).to eql("bS")
       end
     end
 
@@ -206,13 +203,12 @@ RSpec.describe Storage do
       let(:flower) { flower_al }
       it "takes flower from the storage" do
         is_expected.to eql(flower_as)
-        expect(storage.to_s).to eql("aLbSaS")
       end
     end
   end
 
-  describe "#most_abundant_of_size" do
-    subject { storage.most_abundant_of_size("S") }
+  describe "#prevalent_of_size" do
+    subject { storage.prevalent_of_size("S") }
 
     context "when empty" do
       it "returns nil" do

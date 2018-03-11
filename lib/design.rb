@@ -6,7 +6,14 @@ class Design
   FLOWER_SPEC = /(?<flower_quantity>\d+)(?<flower_name>[a-z])/
   private_constant :FLOWER_SPEC
 
-  DESIGN_SPEC = /\A(?<name>[A-Z])(?<size>S|L)(?<flowers spec>(?:#{FLOWER_SPEC})+)(?<quantity>\d+)\z/
+  DESIGN_SPEC = /
+    \A
+    (?<name>[A-Z])
+    (?<size>S|L)
+    (?<flowers spec>(?:#{FLOWER_SPEC})+)
+    (?<quantity>\d+)
+    \z
+  /x
   private_constant :DESIGN_SPEC
 
   attr_reader :name, :size, :flowers, :quantity

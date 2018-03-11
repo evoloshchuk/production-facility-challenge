@@ -9,10 +9,6 @@ class Bouquet
     @registry[flower.name] += 1
   end
 
-  def quantity
-    @registry.values.sum
-  end
-
   def to_s
     spec = @registry.sort.map { |name, quantity| "#{quantity}#{name}" }.join
     "#{@name}#{@size}#{spec}"
