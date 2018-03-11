@@ -32,7 +32,15 @@ class Design
     to_s == other.to_s
   end
 
+  def additional_quantity
+    @quantity - fixed_quantity
+  end
+
   private
+
+  def fixed_quantity
+    @flowers.sum { |_flower, quantity| quantity }
+  end
 
   def parse_flowers_spec(spec)
     matched_data = spec.scan(FLOWER_SPEC)
@@ -54,7 +62,6 @@ class Design
   end
 
   def validate_quantities
-    flowers_quantity = @flowers.sum { |_flower, quantity| quantity }
-    raise(SpecError) unless @quantity >= flowers_quantity
+    raise(SpecError) unless @quantity >= fixed_quantity
   end
 end

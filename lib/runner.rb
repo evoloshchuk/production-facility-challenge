@@ -1,11 +1,15 @@
 require_relative "reader"
-require_relative "producer"
 
 class Runner
-  def self.run(input_io, ouput_io)
+  def initialize(producer_class, capacity=nil)
+    @producer_class = producer_class
+    @capacity = capacity
+  end
+
+  def run(input_io, ouput_io)
     designs, flowers_enum = Reader.read(input_io)
 
-    producer = Producer.new(designs)
+    producer = @producer_class.new(designs, capacity: @capacity)
 
     flowers_enum.each do |flower|
       producer.consume(flower)
@@ -13,6 +17,10 @@ class Runner
       while (bouquet = producer.produce)
         ouput_io.puts(bouquet)
       end
+    end
+
+    while (bouquet = producer.produce(force: true))
+      ouput_io.puts(bouquet)
     end
   end
 end
