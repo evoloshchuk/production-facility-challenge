@@ -3,23 +3,23 @@ require_relative "flower"
 class Design
   class SpecError < StandardError; end
 
-  FLOWER_SPEC = /(?<flower quantity>\d+)(?<flower specie>[a-z])/
+  FLOWER_SPEC = /(?<flower_quantity>\d+)(?<flower_name>[a-z])/
   private_constant :FLOWER_SPEC
-  DESIGN_SPEC = /\A(?<design>[A-Z])(?<size>S|L)(?<flowers spec>(?:#{FLOWER_SPEC})+)(?<quantity>\d+)\z/
+
+  DESIGN_SPEC = /\A(?<name>[A-Z])(?<size>S|L)(?<flowers spec>(?:#{FLOWER_SPEC})+)(?<quantity>\d+)\z/
   private_constant :DESIGN_SPEC
 
-  attr_reader :design, :size, :flowers, :quantity
+  attr_reader :name, :size, :flowers, :quantity
 
   def initialize(spec)
     matched_data = spec.match(DESIGN_SPEC)
     raise(SpecError) if matched_data.nil?
-    @design = matched_data["design"]
+    @name = matched_data["name"]
     @size = matched_data["size"]
     @quantity = matched_data["quantity"].to_i
     @flowers = parse_flowers_spec(matched_data["flowers spec"])
-    flowers_quantity = @flowers.sum { |_flower, quantity| quantity }
-    raise(SpecError) unless @quantity >= flowers_quantity
     @spec = spec
+    validate_quantities
   rescue SpecError
     raise(SpecError, "Invalid design spec '#{spec}'")
   end
@@ -36,14 +36,25 @@ class Design
 
   def parse_flowers_spec(spec)
     matched_data = spec.scan(FLOWER_SPEC)
-    flowers = {}
-    matched_data.each do |flower_quantity, flower_specie|
-      raise(SpecError) unless flower_quantity.to_i > 0
-      raise(SpecError) if flowers.key?(flower_specie)
-      flowers[flower_specie] = flower_quantity.to_i
+    validate_positive_quantity(matched_data)
+    validate_uniq_names(matched_data)
+    matched_data.map do |quantity, name|
+      [Flower.new("#{name}#{@size}"), quantity.to_i]
     end
-    flowers.map do |specie, quantity|
-      [Flower.new("#{specie}#{size}"), quantity]
-    end
+  end
+
+  def validate_positive_quantity(matched_data)
+    quantities = matched_data.map { |quantity, _name| quantity.to_i }
+    raise(SpecError) unless quantities.all? { |quantity| quantity > 0 }
+  end
+
+  def validate_uniq_names(matched_data)
+    names = matched_data.map { |_quantity, name| name }
+    raise(SpecError) unless names.size == names.uniq.size
+  end
+
+  def validate_quantities
+    flowers_quantity = @flowers.sum { |_flower, quantity| quantity }
+    raise(SpecError) unless @quantity >= flowers_quantity
   end
 end

@@ -4,7 +4,7 @@ RSpec.describe Flower do
   subject { described_class.new(spec) }
 
   context "valid spec" do
-    where(:spec, :specie, :size) do
+    where(:spec, :name, :size) do
       [
         ["aL", "a", "L"],
         ["aS", "a", "S"],
@@ -14,7 +14,7 @@ RSpec.describe Flower do
     end
 
     with_them do
-      its(:specie) { is_expected.to eql(specie) }
+      its(:name) { is_expected.to eql(name) }
       its(:size) { is_expected.to eql(size) }
       its(:to_s) { is_expected.to eql(spec) }
     end

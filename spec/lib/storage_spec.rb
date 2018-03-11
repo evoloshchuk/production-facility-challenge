@@ -15,35 +15,35 @@ RSpec.describe Storage do
     its(:to_s) { is_expected.to eql("") }
   end
 
-  describe "#put_flower" do
+  describe "#put" do
     subject { storage }
 
     context "with one flower" do
       before do
-        subject.put_flower(flower_al)
+        subject.put(flower_al)
       end
       its(:to_s) { is_expected.to eql("aL") }
     end
 
     context "with two same flowers" do
       before do
-        subject.put_flower(flower_al)
-        subject.put_flower(flower_al)
+        subject.put(flower_al)
+        subject.put(flower_al)
       end
       its(:to_s) { is_expected.to eql("aLaL") }
     end
 
     context "with two different flowers" do
       before do
-        subject.put_flower(flower_al)
-        subject.put_flower(flower_as)
+        subject.put(flower_al)
+        subject.put(flower_as)
       end
       its(:to_s) { is_expected.to eql("aLaS") }
     end
   end
 
-  describe "#take_flower" do
-    subject { storage.take_flower(flower) }
+  describe "#take" do
+    subject { storage.take(flower) }
 
     context "when empty" do
       let(:flower) { flower_al }
@@ -54,7 +54,7 @@ RSpec.describe Storage do
 
     context "when does not have flower" do
       before do
-        storage.put_flower(flower_al)
+        storage.put(flower_al)
       end
       let(:flower) { flower_as }
       it "raises an exception" do
@@ -64,7 +64,7 @@ RSpec.describe Storage do
 
     context "when has one flower" do
       before do
-        storage.put_flower(flower_al)
+        storage.put(flower_al)
       end
       let(:flower) { flower_al }
       it "takes flower from the storage" do
@@ -75,8 +75,8 @@ RSpec.describe Storage do
 
     context "when has two same flowers" do
       before do
-        storage.put_flower(flower_al)
-        storage.put_flower(flower_al)
+        storage.put(flower_al)
+        storage.put(flower_al)
       end
       let(:flower) { flower_al }
       it "takes flower from the storage" do
@@ -87,8 +87,8 @@ RSpec.describe Storage do
 
     context "when has two different flowers" do
       before do
-        storage.put_flower(flower_al)
-        storage.put_flower(flower_as)
+        storage.put(flower_al)
+        storage.put(flower_as)
       end
       let(:flower) { flower_al }
       it "takes flower from the storage" do
@@ -99,9 +99,9 @@ RSpec.describe Storage do
 
     context "when has multiple flowers" do
       before do
-        storage.put_flower(flower_al)
-        storage.put_flower(flower_as)
-        storage.put_flower(flower_al)
+        storage.put(flower_al)
+        storage.put(flower_as)
+        storage.put(flower_al)
       end
       let(:flower) { flower_al }
       it "takes flower from the storage" do
@@ -111,8 +111,8 @@ RSpec.describe Storage do
     end
   end
 
-  describe "#take_flower_of_size" do
-    subject { storage.take_flower_of_size("S") }
+  describe "#take_of_size" do
+    subject { storage.take_of_size("S") }
 
     context "when empty" do
       it "raises an exception" do
@@ -122,7 +122,7 @@ RSpec.describe Storage do
 
     context "when does not have flower" do
       before do
-        storage.put_flower(flower_al)
+        storage.put(flower_al)
       end
       it "raises an exception" do
         expect { subject }.to raise_error(Storage::OperationError)
@@ -131,7 +131,7 @@ RSpec.describe Storage do
 
     context "when has one flower" do
       before do
-        storage.put_flower(flower_as)
+        storage.put(flower_as)
       end
       it "takes flower from the storage" do
         is_expected.to eql(flower_as)
@@ -141,8 +141,8 @@ RSpec.describe Storage do
 
     context "when has two same flowers" do
       before do
-        storage.put_flower(flower_as)
-        storage.put_flower(flower_as)
+        storage.put(flower_as)
+        storage.put(flower_as)
       end
       it "takes flower from the storage" do
         is_expected.to eql(flower_as)
@@ -152,8 +152,8 @@ RSpec.describe Storage do
 
     context "when has two different flowers" do
       before do
-        storage.put_flower(flower_as)
-        storage.put_flower(flower_bs)
+        storage.put(flower_as)
+        storage.put(flower_bs)
       end
       it "takes flower from the storage" do
         is_expected.to eql(flower_as)
@@ -163,10 +163,10 @@ RSpec.describe Storage do
 
     context "when has multiple flowers" do
       before do
-        storage.put_flower(flower_al)
-        storage.put_flower(flower_as)
-        storage.put_flower(flower_bs)
-        storage.put_flower(flower_as)
+        storage.put(flower_al)
+        storage.put(flower_as)
+        storage.put(flower_bs)
+        storage.put(flower_as)
       end
       let(:flower) { flower_al }
       it "takes flower from the storage" do

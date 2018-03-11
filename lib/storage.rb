@@ -8,14 +8,14 @@ class Storage
     @size_counter = Hash.new(0)
   end
 
-  def put_flower(flower)
+  def put(flower)
     @line[@position] = flower
     @flower_registry[flower.to_s] << @position
     @size_counter[flower.size] += 1
     @position += 1
   end
 
-  def take_flower(flower)
+  def take(flower)
     position = @flower_registry[flower.to_s].shift
     raise(OperationError, "No such flower #{flower}") if position.nil?
     @line.delete(position)
@@ -23,17 +23,17 @@ class Storage
     flower
   end
 
-  def take_flower_of_size(size)
+  def take_of_size(size)
     _position, flower = @line.find { |_position, flower| flower.size == size }
-    take_flower(flower)
+    take(flower)
   end
 
-  def has_flowers?(flower, quantity)
-    @flower_registry[flower.to_s].size >= quantity
+  def count_flowers(flower)
+    @flower_registry[flower.to_s].size
   end
 
-  def has_sizes?(size, quantity)
-    @size_counter[size] >= quantity
+  def count_sizes(size)
+    @size_counter[size]
   end
 
   def to_s

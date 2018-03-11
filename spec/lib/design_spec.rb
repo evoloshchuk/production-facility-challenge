@@ -5,7 +5,7 @@ RSpec.describe Design do
   subject { described_class.new(spec) }
 
   context "valid spec" do
-    where(:spec, :design, :size, :quantity, :flowers) do
+    where(:spec, :name, :size, :quantity, :flowers) do
       [
         ["AL1a1",     "A", "L", 1, [["aL", 1]]],
         ["AL001a001", "A", "L", 1, [["aL", 1]]],
@@ -16,7 +16,7 @@ RSpec.describe Design do
     end
 
     with_them do
-      its(:design) { is_expected.to eql(design) }
+      its(:name) { is_expected.to eql(name) }
       its(:size) { is_expected.to eql(size) }
       its(:quantity) { is_expected.to eql(quantity) }
       its(:flowers) {
